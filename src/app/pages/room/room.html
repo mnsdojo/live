@@ -1,0 +1,93 @@
+<div class="h-screen bg-black text-white flex flex-col overflow-hidden">
+  <header class="p-4 bg-gray-900 flex justify-between items-center shrink-0">
+    <span class="font-semibold">LiveIt - Room</span>
+    @if (!isSharing()) {
+    <button
+      (click)="shareScreen()"
+      class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition"
+    >
+      Share Screen
+    </button>
+    }
+  </header>
+  <main class="flex-1 relative flex items-center justify-center p-4 min-h-0">
+    <video
+      #video
+      autoplay
+      playsinline
+      class="max-w-full max-h-full object-contain rounded-lg border border-gray-700"
+    ></video>
+
+    @if (isSharing()) {
+    <div
+      class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-gray-900/80 backdrop-blur px-3 py-2 rounded-full flex gap-3 shadow-lg"
+    >
+      <!-- Pause / Resume -->
+      <button
+        (click)="togglePauseResume()"
+        class="w-11 h-11 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition"
+        title="{{ isPaused() ? 'Resume' : 'Pause' }}"
+      >
+        @if (!isPaused()) {
+        <!-- Pause Icon -->
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <rect x="6" y="4" width="4" height="16" rx="1" />
+          <rect x="14" y="4" width="4" height="16" rx="1" />
+        </svg>
+        } @else {
+        <!-- Play Icon -->
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <polygon points="5,3 19,12 5,21" />
+        </svg>
+        }
+      </button>
+
+      <!-- Download -->
+      @if(recordedBlob || !isRecording()){
+      <button
+        (click)="downloadStream()"
+        class="w-11 h-11 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition"
+        title="Download recording"
+      >
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 3v12m0 0l4-4m-4 4l-4-4" stroke="currentColor" stroke-width="2" fill="none" />
+          <rect x="4" y="17" width="16" height="4" rx="2" />
+        </svg>
+      </button>
+      }
+
+      <!-- Stop -->
+      <button
+        (click)="stop()"
+        class="w-11 h-11 flex items-center justify-center rounded-full bg-red-600 hover:bg-red-700 transition"
+        title="Stop sharing"
+      >
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="12" rx="2" ry="2" />
+          <line x1="2" y1="2" x2="22" y2="22" />
+        </svg>
+      </button>
+
+      <!-- Record -->
+      <button
+        (click)="isRecording() ? stopRecord() : startRecording()"
+        class="w-11 h-11 flex items-center justify-center rounded-full transition"
+        [ngClass]="isRecording() ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-800 hover:bg-gray-700'"
+        title="{{ isRecording() ? 'Stop Recording' : 'Start Recording' }}"
+      >
+        @if (!isRecording()) {
+        <!-- Record Icon -->
+        <svg class="w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="12" r="6" />
+        </svg>
+        } @else {
+        <!-- Stop Recording Icon -->
+        <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="6" y="6" width="12" height="12" rx="2" />
+        </svg>
+        }
+      </button>
+    </div>
+    }
+  </main>
+</div>
